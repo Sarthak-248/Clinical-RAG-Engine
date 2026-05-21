@@ -36,7 +36,10 @@ function renderEnrichmentField(label, value) {
 import { useState } from "react";
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? "" : "http://localhost:5000");
+// Determine API URL based on where the browser is running
+const API_BASE_URL = window.location.hostname === "localhost" 
+  ? "http://localhost:5000" 
+  : "";
 
 function formatLatency(ms) {
   if (!ms && ms !== 0) return "-";
