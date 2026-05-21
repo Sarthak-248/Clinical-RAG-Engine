@@ -27,6 +27,8 @@ app.use(
       return callback(new Error(`CORS blocked for origin: ${origin}`));
     },
   })
+);
+
 app.use(helmet({
   contentSecurityPolicy: false, // Disabling CSP temporarily for React assets to load properly in production, adjust as needed securely
 }));
