@@ -78,24 +78,12 @@ function App() {
 
   return (
     <div className="page">
-      <header className="hero medi-hero">
-        <div className="medi-logo-title">
-          <span className="medi-logo">✚</span>
-          <span className="medi-title">Medi<span className="plus">+</span></span>
-        </div>
-        <h1 className="medi-headline">Trusted, Structured Clinical Answers in Seconds</h1>
-        <p className="subtitle">
-          Ask a focused clinical question and receive a concise, evidence-graded summary with direct citations from PubMed, ClinicalTrials.gov, and openFDA.
-        </p>
-      </header>
+      <header className="hero medi-hero" style={{ padding: "2.5rem 3rem", textAlign: "center", marginBottom: "2rem" }}><h1 style={{ fontSize: "2.2rem", marginBottom: "0.5rem" }}>Jubilant Clinical-QA Engine</h1><p style={{ color: "#e0f2fe", fontSize: "1rem", margin: 0, opacity: 0.9 }}>Evidence-based medical intelligence</p></header>
 
       <main className="layout">
         <section className="card query-card">
-          <h2 className="medi-section-title">Enter Your Clinical Question</h2>
           <form onSubmit={handleSubmit} className="medi-form">
-            <label htmlFor="question" className="label">
-              <span className="example-label">Example:</span> In adults with community-acquired pneumonia, does procalcitonin-guided therapy reduce antibiotic duration?
-            </label>
+            <label htmlFor="question" className="label" style={{ display: "none" }}>Enter Clinical Question</label>
             <textarea
               id="question"
               value={question}
@@ -105,7 +93,11 @@ function App() {
               className="medi-textarea"
             />
             <button type="submit" className="medi-btn" disabled={loading}>
-              {loading ? "Reviewing trusted medical evidence..." : "Get Evidence Summary"}
+              {loading ? (
+                <>
+                  <span className="loader-spinner"></span> Reviewing Evidence...
+                </>
+              ) : "Get Evidence Summary"}
             </button>
           </form>
           {error ? <p className="error">{error}</p> : null}
@@ -135,20 +127,20 @@ function App() {
                 </div>
               )}
 
-              {result.structuredAnswer?.recommendations?.length > 0 && (
-                <div className="medi-structured-list">
-                  <strong>Recommendations:</strong>
+              {result.structuredAnswer?.redFlags?.length > 0 && (
+                <div className="medi-structured-list red-flags-box">
+                  <strong>Clinical Red Flags:</strong>
                   <ul>
-                    {result.structuredAnswer.recommendations.map((rec, i) => <li key={i}>{rec}</li>)}
+                    {result.structuredAnswer.redFlags.map((rf, i) => <li key={i}>{rf}</li>)}
                   </ul>
                 </div>
               )}
 
-              {result.structuredAnswer?.redFlags?.length > 0 && (
-                <div className="medi-structured-list" style={{color: '#d9534f'}}>
-                  <strong>Clinical Red Flags:</strong>
+              {result.structuredAnswer?.recommendations?.length > 0 && (
+                <div className="medi-structured-list recommendations-box">
+                  <strong>Recommendations:</strong>
                   <ul>
-                    {result.structuredAnswer.redFlags.map((flag, i) => <li key={i}>{flag}</li>)}
+                    {result.structuredAnswer.recommendations.map((rec, i) => <li key={i}>{rec}</li>)}
                   </ul>
                 </div>
               )}
@@ -218,3 +210,4 @@ function App() {
 }
 
 export default App;
+

@@ -3,6 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
+const path = require("path");
 const routes = require("./routes/qa.routes");
 const { errorHandler } = require("./middleware/error-handler");
 const env = require("./config/env");
@@ -26,8 +27,9 @@ app.use(
       return callback(new Error(`CORS blocked for origin: ${origin}`));
     },
   })
-);
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, // Disabling CSP temporarily for React assets to load properly in production, adjust as needed securely
+}));
 app.use(express.json({ limit: "1mb" }));
 app.use(morgan("dev"));
 
@@ -42,6 +44,15 @@ app.use(
 );
 
 app.use("/api", routes);
+
+// Serve static frontend in production
+if (env.nodeEnv === "production") {
+  app.use(express.static(path.join(__dirname, "../client/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  });
+}
 
 app.use(errorHandler);
 
